@@ -1,4 +1,4 @@
-package com.example.badgedimageview
+package com.asiman.badgedimageview
 
 import org.junit.Test
 
