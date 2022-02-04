@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="BadgedImageView">
+        <attr name="badgeEnabled" format="boolean" />
+        <attr name="badgeCustomIcon" format="reference" />
+        <attr name="badgeRadius" format="dimension|reference" />
+        <attr name="badgeBorderWidth" format="dimension|reference" />
+    </declare-styleable>
+
+</resources>
