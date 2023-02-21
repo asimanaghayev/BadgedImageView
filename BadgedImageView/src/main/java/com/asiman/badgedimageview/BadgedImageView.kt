@@ -116,15 +116,13 @@ class BadgedImageView : AppCompatImageView {
             style = Paint.Style.STROKE
         }
 
+        badgeIcon = ContextCompat.getDrawable(context, R.drawable.ic_tab_badge)!!
+        padding = ((paddingTop / 1.5).roundToInt())
         setLayerType(View.LAYER_TYPE_SOFTWARE, null)
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
-        if (badgeEnabled) {
-            badgeIcon = ContextCompat.getDrawable(context, R.drawable.ic_tab_badge)!!
-            padding = ((paddingTop / 1.5).roundToInt())
-        }
         if (badgeEnabled && badgeText?.isNotEmpty() == true) {
             badgePaint.color = ContextCompat.getColor(context, android.R.color.white)
             badgePaint.textSize = badgeTextSize
