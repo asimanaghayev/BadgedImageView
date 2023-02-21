@@ -3,6 +3,8 @@
 
     <declare-styleable name="BadgedImageView">
         <attr name="badgeEnabled" format="boolean" />
+        <attr name="badgeTextSize" format="dimension|reference" />
+        <attr name="badgeTextColor" format="color|reference" />
         <attr name="badgeCustomIcon" format="reference" />
         <attr name="badgeRadius" format="dimension|reference" />
         <attr name="badgeBorderWidth" format="dimension|reference" />

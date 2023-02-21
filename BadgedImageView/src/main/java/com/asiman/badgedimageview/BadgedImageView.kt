@@ -24,7 +24,11 @@ class BadgedImageView : AppCompatImageView {
     private lateinit var badgeIcon: Drawable
     private var badgeRadius = 0
     private var badgeBorderWidth = 0
+
     private var badgeText: String? = null
+    private var badgeTextSize: Float = 0f
+    private var badgeTextColor: Int = 0
+
     private var badgeEnabled = false
 
     @DrawableRes
@@ -71,14 +75,27 @@ class BadgedImageView : AppCompatImageView {
                 R.styleable.BadgedImageView_badgeEnabled,
                 false
             ))
-            setBadgeRadius(typedArray.getDimensionPixelSize(
+
+            setBadgeTextSize(typedArray.getDimension(
+                R.styleable.BadgedImageView_badgeTextSize,
+                resources.getDimension(R.dimen.badge_text)
+            ))
+
+            setBadgeTextColor(typedArray.getColor(
+                R.styleable.BadgedImageView_badgeTextColor,
+                ContextCompat.getColor(context, R.color.main_badge_color)
+            ))
+
+            setBadgeRadius(typedArray.getDimension(
                 R.styleable.BadgedImageView_badgeRadius,
-                R.dimen.badge_icon_size
+                resources.getDimension(R.dimen.badge_icon_size)
             ))
-            setBadgeBorderWidth(typedArray.getDimensionPixelSize(
+
+            setBadgeBorderWidth(typedArray.getDimension(
                 R.styleable.BadgedImageView_badgeBorderWidth,
-                R.dimen.badge_default_border
+                resources.getDimension(R.dimen.badge_default_border)
             ))
+
             setCustomBadgeIcon(typedArray.getResourceId(
                 R.styleable.BadgedImageView_badgeCustomIcon,
                 0
@@ -110,7 +127,8 @@ class BadgedImageView : AppCompatImageView {
         }
         if (badgeEnabled && badgeText?.isNotEmpty() == true) {
             badgePaint.color = ContextCompat.getColor(context, android.R.color.white)
-            badgePaint.textSize = resources.getDimension(R.dimen.badge_text)
+            badgePaint.textSize = badgeTextSize
+            badgePaint.typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
             badgePaint.getTextBounds(badgeText, 0, badgeText!!.length, badgeBounds)
             badgeTextPositionX = padding + badgeRadius / 2 + badgeBounds.width() / 2 + 2
             badgeTextPositionY = padding + badgeRadius / 2 + badgeBounds.height() / 2
@@ -127,10 +145,9 @@ class BadgedImageView : AppCompatImageView {
                 badgeRadius + padding
             )
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                badgeIcon.setTint(ContextCompat.getColor(context, R.color.main_red))
+                badgeIcon.setTint(badgeTextColor)
             } else {
-                badgeIcon.mutate().setColorFilter(resources.getColor(R.color.main_red),
-                    PorterDuff.Mode.SRC_IN)
+                badgeIcon.mutate().setColorFilter(badgeTextColor, PorterDuff.Mode.SRC_IN)
             }
             badgeIcon.draw(canvas)
             val badgeRadius = badgeRadius / 2
@@ -145,9 +162,12 @@ class BadgedImageView : AppCompatImageView {
         }
         if (badgeEnabled && customBadgeIcon != 0) {
             val bitmap: Bitmap = BitmapFactory.decodeResource(resources, customBadgeIcon)
-            canvas.drawBitmap(bitmap, (
-                    width - badgeRadius - padding).toFloat(),
-                padding.toFloat(), null)
+            canvas.drawBitmap(
+                bitmap,
+                (width - badgeRadius - padding).toFloat(),
+                padding.toFloat(),
+                null
+            )
         } else if (badgeEnabled) {
             badgeText?.let {
                 canvas.drawText(it, (
@@ -166,7 +186,17 @@ class BadgedImageView : AppCompatImageView {
      * @param dimen the resource id of dimension.
      */
     fun setBadgeRadius(@DimenRes dimen: Int) {
-        badgeRadius = resources.getDimension(dimen).roundToInt()
+        setBadgeRadius(resources.getDimension(dimen))
+    }
+
+    /**
+     * This method is for setting badge icon size. <br></br>
+     * By default radius id is [R.dimen.badge_icon_size].
+     *
+     * @param dimen the dimension.
+     */
+    fun setBadgeRadius(dimen: Float) {
+        badgeRadius = dimen.roundToInt()
     }
 
     /**
@@ -175,7 +205,16 @@ class BadgedImageView : AppCompatImageView {
      * @param dimen the resource id of dimension.
      */
     fun setBadgeBorderWidth(@DimenRes dimen: Int) {
-        badgeBorderWidth = resources.getDimension(dimen).roundToInt()
+        setBadgeBorderWidth(resources.getDimension(dimen))
+    }
+
+    /**
+     * This method is for setting badge border width. <br></br>
+     *
+     * @param dimen of dimension.
+     */
+    fun setBadgeBorderWidth(dimen: Float) {
+        badgeBorderWidth = dimen.roundToInt()
     }
 
     /**
@@ -193,6 +232,24 @@ class BadgedImageView : AppCompatImageView {
             setBadgeEnabled(false)
             invalidate()
         }
+    }
+
+    /**
+     * This method sets the size of badge text. <br></br>
+     *
+     * @param size text size for badge
+     */
+    fun setBadgeTextSize(size: Float) {
+        badgeTextSize = size
+    }
+
+    /**
+     * This method sets the color of badge text. <br></br>
+     *
+     * @param color text color for badge text
+     */
+    fun setBadgeTextColor(color: Int) {
+        badgeTextColor = color
     }
 
     /**
@@ -214,7 +271,6 @@ class BadgedImageView : AppCompatImageView {
     fun setCustomBadgeIcon(@DrawableRes res: Int) {
         customBadgeIcon = res
     }
-
 
     /**
      * This method is for normalizing count for notification badge. <br></br>
