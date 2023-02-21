@@ -225,10 +225,10 @@ class BadgedImageView : AppCompatImageView {
         if (count > 0) {
             badgeText = getNotificationBadge(count)
             setBadgeEnabled(true)
-            invalidate()
+            requestLayout()
         } else if (badgeEnabled) {
             setBadgeEnabled(false)
-            invalidate()
+            requestLayout()
         }
     }
 
